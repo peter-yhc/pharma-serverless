@@ -1,0 +1,54 @@
+service: pharma-serverless
+
+custom:
+  tableName: PatientTable
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: ap-southeast-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:custom.tableName}"
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+        - lambda:InvokeAsync
+      Resource: "*"
+
+# DynamoDB config
+resources:
+  Resources:
+    StockTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: symbol
+            AttributeType: S
+        KeySchema:
+          - AttributeName: symbol
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+functions:
+  hello:
+    handler: handler.hello
+
+# Ignored Files
+package:
+  exclude:
+    - '.idea/**'
+    - 'src/**/*.test.js'
+    - '*Docker*'
+    - '*docker*'
+    - '.dynamodb/**'
