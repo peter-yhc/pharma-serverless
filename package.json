@@ -2,16 +2,18 @@
   "name": "pharma-serverless",
   "version": "1.0.0",
   "description": "",
-  "main": "handler.js",
+  "main": "src/handler.js",
   "scripts": {
     "test": "jest"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2"
+    "eslint-plugin-import": "^2.18.2",
+    "aws-sdk": "^2.568.0"
   }
 }

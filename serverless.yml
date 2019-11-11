@@ -41,8 +41,20 @@ resources:
           WriteCapacityUnits: 1
 
 functions:
-  hello:
-    handler: handler.hello
+  getPatients:
+    handler: src/handler.getPatients
+    events:
+      - http:
+          path: /patients
+          method: get
+          cors: true
+  savePatient:
+    handler: src/handler.savePatient
+    events:
+      - http:
+          path: /patients
+          method: post
+          cors: true
 
 # Ignored Files
 package:
