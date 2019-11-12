@@ -31,10 +31,10 @@ resources:
       Properties:
         TableName: ${self:custom.tableName}
         AttributeDefinitions:
-          - AttributeName: symbol
+          - AttributeName: username
             AttributeType: S
         KeySchema:
-          - AttributeName: symbol
+          - AttributeName: username
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1

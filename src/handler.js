@@ -13,13 +13,18 @@ const getPatients = async () => {
 
   return {
     statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+    },
     body: JSON.stringify({
       patients: patients.Items,
     }),
   };
 };
 
-const savePatient = async (patient) => {
+const savePatient = async (request) => {
+  const patient = JSON.parse(request.body);
   await documentClient
     .put({
       TableName: 'PatientTable',
