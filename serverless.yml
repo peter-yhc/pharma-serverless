@@ -1,7 +1,8 @@
 service: pharma-serverless
 
 custom:
-  tableName: PatientTable
+  patientTableName: PatientTable
+  adminUserTableName: AdminUserTable
 
 provider:
   name: aws
@@ -16,7 +17,9 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:custom.tableName}"
+      Resource:
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:custom.patientTableName}"
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:custom.adminUserTableName}"
     - Effect: Allow
       Action:
         - lambda:InvokeFunction
@@ -26,10 +29,10 @@ provider:
 # DynamoDB config
 resources:
   Resources:
-    StockTable:
+    PatientTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.tableName}
+        TableName: ${self:custom.patientTableName}
         AttributeDefinitions:
           - AttributeName: username
             AttributeType: S
@@ -39,22 +42,54 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+    AdminUserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.adminUserTableName}
+        AttributeDefinitions:
+          - AttributeName: username_email_key
+            AttributeType: S
+        KeySchema:
+          - AttributeName: username_email_key
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
 functions:
   getPatients:
-    handler: src/handler.getPatients
+    handler: src/patient-handler.getPatients
     events:
       - http:
           path: /patients
           method: get
           cors: true
+          authorizer: adminAuthorizer
   savePatient:
-    handler: src/handler.savePatient
+    handler: src/patient-handler.savePatient
     events:
       - http:
           path: /patients
           method: post
           cors: true
+          authorizer: adminAuthorizer
+  signup:
+    handler: src/auth-handler.signup
+    events:
+      - http:
+          path: /signup
+          method: post
+          cors: true
+  login:
+    handler: src/auth-handler.login
+    events:
+      - http:
+          path: /login
+          method: post
+          cors: true
+  adminAuthorizer:
+    handler: src/auth-handler.authorize
+
 
 # Ignored Files
 package:
