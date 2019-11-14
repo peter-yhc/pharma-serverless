@@ -1,7 +1,8 @@
 service: pharma-serverless
 
 custom:
-  tableName: PatientTable
+  patientTableName: PatientTable
+  adminUserTableName: AdminUserTable
 
 provider:
   name: aws
@@ -16,7 +17,9 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:custom.tableName}"
+      Resource:
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:custom.patientTableName}"
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:custom.adminUserTableName}"
     - Effect: Allow
       Action:
         - lambda:InvokeFunction
@@ -35,6 +38,19 @@ resources:
             AttributeType: S
         KeySchema:
           - AttributeName: username
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    AdminUserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.adminUserTableName}
+        AttributeDefinitions:
+          - AttributeName: username_email_key
+            AttributeType: S
+        KeySchema:
+          - AttributeName: username_email_key
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
