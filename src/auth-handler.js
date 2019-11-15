@@ -56,8 +56,8 @@ const signup = async (request) => {
     .put({
       TableName: 'AdminUserTable',
       Item: {
-        username_email_key: `${formData.username}_${formData.email}`,
         username: formData.username,
+        email: formData.email,
         password: hash,
       },
     })
@@ -76,18 +76,15 @@ const login = async (request) => {
   const { username, password } = JSON.parse(request.body);
 
   const scanResult = await documentClient
-    .scan({
+    .get({
       TableName: 'AdminUserTable',
-      FilterExpression: '#username = :username_val',
-      ExpressionAttributeNames: {
-        '#username': 'username',
+      Key: {
+        username,
       },
-      ExpressionAttributeValues: { ':username_val': username },
-
     })
     .promise();
 
-  const userEntry = scanResult.Items[0];
+  const userEntry = scanResult.Item;
   const result = bcrypt.compareSync(password, userEntry.password);
   if (result) {
     const token = JWT.sign({ username: userEntry.username }, JWT_SECRET, { expiresIn: '1h' });
@@ -96,6 +93,7 @@ const login = async (request) => {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Credentials': true,
+        'Access-Control-Expose-Headers': '*',
         Authorization: token,
       },
     };
