@@ -29,10 +29,10 @@ provider:
 # DynamoDB config
 resources:
   Resources:
-    StockTable:
+    PatientTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.tableName}
+        TableName: ${self:custom.patientTableName}
         AttributeDefinitions:
           - AttributeName: username
             AttributeType: S
@@ -58,19 +58,38 @@ resources:
 
 functions:
   getPatients:
-    handler: src/handler.getPatients
+    handler: src/patient-handler.getPatients
     events:
       - http:
           path: /patients
           method: get
           cors: true
+          authorizer: adminAuthorizer
   savePatient:
-    handler: src/handler.savePatient
+    handler: src/patient-handler.savePatient
     events:
       - http:
           path: /patients
           method: post
           cors: true
+          authorizer: adminAuthorizer
+  signup:
+    handler: src/auth-handler.signup
+    events:
+      - http:
+          path: /signup
+          method: post
+          cors: true
+  login:
+    handler: src/auth-handler.login
+    events:
+      - http:
+          path: /login
+          method: post
+          cors: true
+  adminAuthorizer:
+    handler: src/auth-handler.authorize
+
 
 # Ignored Files
 package:
