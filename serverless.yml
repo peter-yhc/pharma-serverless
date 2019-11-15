@@ -47,10 +47,10 @@ resources:
       Properties:
         TableName: ${self:custom.adminUserTableName}
         AttributeDefinitions:
-          - AttributeName: username_email_key
+          - AttributeName: username
             AttributeType: S
         KeySchema:
-          - AttributeName: username_email_key
+          - AttributeName: username
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
