@@ -6,7 +6,7 @@ describe('test authentication payload schemas', () => {
       const { error } = signupSchema.validate({
         username: 1,
         password: 'correct',
-        repeat_password: 'correct',
+        repeatPassword: 'correct',
         email: 'valid@valid.com',
       });
       expect(error.message).toBe('"username" must be a string');
@@ -16,7 +16,7 @@ describe('test authentication payload schemas', () => {
       const { error } = signupSchema.validate({
         username: '21',
         password: 'correct',
-        repeat_password: 'correct',
+        repeatPassword: 'correct',
         email: 'valid@valid.com',
       });
       expect(error.message).toBe('"username" must be a string');
