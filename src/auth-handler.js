@@ -103,10 +103,34 @@ const login = async (request) => {
   };
 };
 
-const authorize = (request, context, callback) => {
-  const token = request.authorizationToken;
+const checkToken = async (request) => {
   try {
-    JWT.verify(token, JWT_SECRET);
+    const token = request.headers.Authorization;
+    await JWT.verify(token, JWT_SECRET);
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Expose-Headers': '*',
+      },
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      statusCode: 401,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+      },
+    };
+  }
+};
+
+const authorize = async (request, context, callback) => {
+  try {
+    const token = request.authorizationToken;
+    await JWT.verify(token, JWT_SECRET);
     callback(null, generatePolicy('user', 'Allow', request.methodArn));
   } catch (err) {
     callback('Unauthorized');
@@ -117,4 +141,5 @@ module.exports = {
   signup,
   login,
   authorize,
+  checkToken,
 };

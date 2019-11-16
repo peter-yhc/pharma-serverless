@@ -87,6 +87,13 @@ functions:
           path: /login
           method: post
           cors: true
+  checkToken:
+    handler: src/auth-handler.checkToken
+    events:
+      - http:
+          path: /check-token
+          method: get
+          cors: true
   adminAuthorizer:
     handler: src/auth-handler.authorize
 
