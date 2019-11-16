@@ -7,7 +7,7 @@ const signupSchema = Joi.object({
     .max(30)
     .required(),
   password: Joi.string().max(30).required(),
-  repeat_password: Joi.ref('password'),
+  repeatPassword: Joi.ref('password'),
   email: Joi.string().email({ minDomainSegments: 2 }),
 });
 

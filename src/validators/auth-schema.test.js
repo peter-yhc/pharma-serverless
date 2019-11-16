@@ -27,7 +27,7 @@ describe('test authentication payload schemas', () => {
       const { error } = signupSchema.validate({
         username: '111111111111111111111111111111111111111111111111111111111',
         password: 'correct',
-        repeat_password: 'correct',
+        repeatPassword: 'correct',
         email: 'valid@valid.com',
       });
       expect(error.message).toContain('username');
@@ -38,7 +38,7 @@ describe('test authentication payload schemas', () => {
       const { error } = signupSchema.validate({
         username: 'correct',
         password: 1100,
-        repeat_password: 1100,
+        repeatPassword: 1100,
         email: 'valid@valid.com',
       });
       expect(error.message).toBe('"password" must be a string');
@@ -48,7 +48,7 @@ describe('test authentication payload schemas', () => {
       const { error } = signupSchema.validate({
         username: 'correct',
         password: '',
-        repeat_password: '',
+        repeatPassword: '',
         email: 'valid@valid.com',
       });
       expect(error.message).toContain('password');
@@ -59,7 +59,7 @@ describe('test authentication payload schemas', () => {
       const { error } = signupSchema.validate({
         username: 'correct',
         password: '1111111111111111111111111111111111111',
-        repeat_password: '1111111111111111111111111111111111111',
+        repeatPassword: '1111111111111111111111111111111111111',
         email: 'valid@valid.com',
       });
       expect(error.message).toContain('password');
@@ -70,7 +70,7 @@ describe('test authentication payload schemas', () => {
       const { error } = signupSchema.validate({
         username: 'correct',
         password: 'password should be same',
-        repeat_password: 'password should be same',
+        repeatPassword: 'password should be same',
         email: 'valid@valid.com',
       });
       expect(error).toBeFalsy();
@@ -80,17 +80,17 @@ describe('test authentication payload schemas', () => {
       const { error } = signupSchema.validate({
         username: 'correct',
         password: 'password should be same',
-        repeat_password: 'not the same',
+        repeatPassword: 'not the same',
         email: 'valid@valid.com',
       });
-      expect(error.message).toContain('"repeat_password" must be [ref:password]');
+      expect(error.message).toContain('"repeatPassword" must be [ref:password]');
     });
 
     test('email must be in correct format - invalid domain', () => {
       const { error } = signupSchema.validate({
         username: 'correct',
         password: 'password should be same',
-        repeat_password: 'password should be same',
+        repeatPassword: 'password should be same',
         email: 'abc@invalid',
       });
       expect(error.message).toContain('email');
@@ -101,7 +101,7 @@ describe('test authentication payload schemas', () => {
       const { error } = signupSchema.validate({
         username: 'correct',
         password: 'password should be same',
-        repeat_password: 'password should be same',
+        repeatPassword: 'password should be same',
         email: '@invalid.com',
       });
       expect(error.message).toContain('email');
