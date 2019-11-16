@@ -103,30 +103,6 @@ const login = async (request) => {
   };
 };
 
-const checkToken = async (request) => {
-  try {
-    const token = request.headers.Authorization;
-    await JWT.verify(token, JWT_SECRET);
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
-        'Access-Control-Expose-Headers': '*',
-      },
-    };
-  } catch (err) {
-    console.log(err);
-    return {
-      statusCode: 401,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
-      },
-    };
-  }
-};
-
 const authorize = async (request, context, callback) => {
   try {
     const token = request.authorizationToken;
@@ -141,5 +117,4 @@ module.exports = {
   signup,
   login,
   authorize,
-  checkToken,
 };
