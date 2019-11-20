@@ -34,6 +34,10 @@ const savePatient = async (request) => {
 
   return {
     statusCode: 201,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+    },
   };
 }
 
