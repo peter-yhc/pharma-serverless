@@ -93,7 +93,7 @@ const login = async (request) => {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Credentials': true,
-        'Access-Control-Expose-Headers': '*',
+        'Access-Control-Expose-Headers': 'x-amzn-remapped-authorization',
         Authorization: token,
       },
     };
