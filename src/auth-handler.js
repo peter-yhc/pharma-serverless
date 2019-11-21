@@ -107,8 +107,10 @@ const authorize = async (request, context, callback) => {
   try {
     const token = request.authorizationToken;
     await JWT.verify(token, JWT_SECRET);
-    callback(null, generatePolicy('user', 'Allow', request.methodArn));
+    const prefix = request.methodArn.split('/');
+    callback(null, generatePolicy('user', 'Allow', `${prefix[0]}/*/patients`));
   } catch (err) {
+    console.log('Error authorizing request', err, request);
     callback('Unauthorized');
   }
 };
